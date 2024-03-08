@@ -1,0 +1,89 @@
+{
+    "name": "@diia-inhouse/i18n",
+    "version": "2.0.1",
+    "description": "Internationalization package",
+    "repository": "https://github.com/diia-open-source/be-pkg-i18n.git",
+    "license": "SEE LICENSE IN LICENSE.md",
+    "author": "Diia",
+    "main": "dist/index.js",
+    "types": "dist/types/index.d.ts",
+    "files": [
+        "dist"
+    ],
+    "scripts": {
+        "prebuild": "rimraf dist",
+        "build": "tsc",
+        "find-circulars": "madge --circular ./",
+        "lint": "eslint --ext .ts . && prettier --check .",
+        "lint-fix": "eslint '*/**/*.{js,ts}' --fix && prettier --write .",
+        "lint:lockfile": "lockfile-lint --path package-lock.json --allowed-hosts registry.npmjs.org --validate-https",
+        "prepare": "npm run build",
+        "semantic-release": "semantic-release",
+        "start": "npm run build && node dist/index.js",
+        "test": "jest",
+        "test:coverage": "jest --coverage",
+        "test:unit": "npm run test --selectProjects unit --"
+    },
+    "commitlint": {
+        "extends": "@diia-inhouse/configs/dist/commitlint"
+    },
+    "prettier": "@diia-inhouse/eslint-config/prettier",
+    "eslintConfig": {
+        "extends": "@diia-inhouse/eslint-config",
+        "overrides": [
+            {
+                "files": [
+                    "*.ts"
+                ],
+                "parserOptions": {
+                    "project": [
+                        "./tsconfig.json",
+                        "./tests/tsconfig.json"
+                    ]
+                }
+            }
+        ]
+    },
+    "release": {
+        "branches": [
+            "main"
+        ],
+        "extends": "@diia-inhouse/configs/dist/semantic-release/package"
+    },
+    "jest": {
+        "preset": "@diia-inhouse/configs/dist/jest"
+    },
+    "dependencies": {
+        "@types/i18n": "0.13.10",
+        "i18n": "0.15.1",
+        "type-fest": "4.10.2"
+    },
+    "devDependencies": {
+        "@commitlint/cli": "18.4.3",
+        "@diia-inhouse/configs": "^1.27.1",
+        "@diia-inhouse/eslint-config": "^3.5.0",
+        "@diia-inhouse/test": "^5.1.1",
+        "@diia-inhouse/types": "^5.0.1",
+        "@types/jest": "29.5.11",
+        "@types/node": "20.10.5",
+        "eslint": "8.53.0",
+        "jest": "29.5.0",
+        "lockfile-lint": "4.12.1",
+        "madge": "6.1.0",
+        "prettier": "3.0.3",
+        "rimraf": "5.0.5",
+        "semantic-release": "21.1.2",
+        "ts-node": "10.9.2",
+        "ts-patch": "3.1.1",
+        "typescript": "5.2.2"
+    },
+    "peerDependencies": {
+        "@diia-inhouse/types": ">=1.0.0"
+    },
+    "engines": {
+        "node": ">=18"
+    },
+    "madge": {
+        "tsConfig": "./tsconfig.json"
+    }
+}
