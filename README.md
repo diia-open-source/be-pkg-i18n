@@ -26,7 +26,7 @@ This repository contains the package with internationalization.
 Example:
 
 ```
-git clone https://github.com/diia-open-source/pkg-i18n.git
+git clone https://github.com/diia-open-source/be-pkg-i18n.git pkg-i18n
 ```
 
 ---

@@ -1,6 +1,6 @@
 {
     "name": "@diia-inhouse/i18n",
-    "version": "2.0.1",
+    "version": "2.0.2",
     "description": "Internationalization package",
     "repository": "https://github.com/diia-open-source/be-pkg-i18n.git",
     "license": "SEE LICENSE IN LICENSE.md",
