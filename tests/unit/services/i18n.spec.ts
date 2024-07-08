@@ -1,5 +1,5 @@
 /* eslint-disable no-underscore-dangle */
-import { AsyncLocalStorage } from 'async_hooks'
+import { AsyncLocalStorage } from 'node:async_hooks'
 
 import { mockInstance } from '@diia-inhouse/test'
 import { AlsData } from '@diia-inhouse/types'
@@ -19,7 +19,9 @@ describe(`${I18nService.name}`, () => {
 
     describe('get', () => {
         it('should return just key when item not found', () => {
-            jest.spyOn(asyncLocalStorage, 'getStore').mockReturnValue(undefined)
+            const store = undefined
+
+            jest.spyOn(asyncLocalStorage, 'getStore').mockReturnValue(store)
 
             const i18nService = new I18nService(<AsyncLocalStorage<AlsData>>asyncLocalStorage)
 
