@@ -1,8 +1,8 @@
 /* eslint-disable no-underscore-dangle */
 export const i18nStubs = {
-    configure: jest.fn(),
-    __: jest.fn(),
-    setLocale: jest.fn(),
+    configure: vi.fn(),
+    __: vi.fn(),
+    setLocale: vi.fn(),
 }
 
 export class I18nMock {

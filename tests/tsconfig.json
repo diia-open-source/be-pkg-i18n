@@ -4,5 +4,5 @@
         "baseUrl": "../",
         "noEmit": true
     },
-    "include": ["./**/*"]
+    "include": ["./**/*", "../vitest.config.mts"]
 }
