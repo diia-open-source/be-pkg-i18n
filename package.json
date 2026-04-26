@@ -1,6 +1,6 @@
 {
     "name": "@diia-inhouse/i18n",
-    "version": "2.8.17",
+    "version": "2.8.18",
     "description": "Internationalization package",
     "repository": "https://github.com/diia-open-source/be-pkg-i18n",
     "license": "SEE LICENSE IN LICENSE.md",
@@ -52,8 +52,8 @@
         "extends": "@diia-inhouse/configs/dist/semantic-release/package"
     },
     "dependencies": {
-        "@diia-inhouse/diia-logger": "3.20.3",
-        "@diia-inhouse/diia-metrics": "6.5.27",
+        "@diia-inhouse/diia-logger": "3.20.4",
+        "@diia-inhouse/diia-metrics": "6.5.28",
         "@types/i18n": "0.13.12",
         "glob": "11.1.0",
         "he": "1.2.0",
