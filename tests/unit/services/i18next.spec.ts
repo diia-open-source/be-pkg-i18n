@@ -1,21 +1,24 @@
 import { AsyncLocalStorage } from 'node:async_hooks'
 
-import { LOCALE } from 'src/interfaces/services/i18n'
-import { I18nextService } from 'src/services/i18next'
 import { beforeEach, describe, expect, it, vi } from 'vitest'
 import { mock } from 'vitest-mock-extended'
 
-import DiiaLogger from '@diia-inhouse/diia-logger'
+import { DiiaLogger } from '@diia-inhouse/diia-logger'
 import { AlsData } from '@diia-inhouse/types'
 
+import { LOCALE } from '../../../src/interfaces/services/i18n.js'
+import { I18nextService } from '../../../src/services/i18next.js'
+
+type TOptions = { ns?: string; lng?: string } | undefined
+
 const mockInstance = {
-    use: vi.fn(function () {
+    use: vi.fn<(this: unknown) => unknown>(function (this: unknown) {
         return this
     }),
-    init: vi.fn(function () {
+    init: vi.fn<(this: unknown) => unknown>(function (this: unknown) {
         return this
     }),
-    t: vi.fn((key, options) => {
+    t: vi.fn<(key: string, options?: TOptions) => string>((key, options) => {
         if (key === 'not.found.key') {
             return key
         }
@@ -29,7 +32,7 @@ const mockInstance = {
 
 vi.mock('i18next', () => {
     return {
-        createInstance: vi.fn(() => mockInstance),
+        createInstance: vi.fn<() => typeof mockInstance>(() => mockInstance),
     }
 })
 
@@ -40,7 +43,7 @@ vi.mock('i18next-fs-backend', () => {
 })
 
 vi.mock('node:path', () => {
-    const mockJoin = vi.fn((...args) => args.join('/'))
+    const mockJoin = vi.fn<(...args: string[]) => string>((...args) => args.join('/'))
 
     return {
         join: mockJoin,
@@ -52,8 +55,8 @@ vi.mock('node:path', () => {
 
 vi.mock('node:fs', () => {
     return {
-        lstatSync: vi.fn(() => ({ isDirectory: (): boolean => true })),
-        readdirSync: vi.fn(() => []),
+        lstatSync: vi.fn<() => { isDirectory: () => boolean }>(() => ({ isDirectory: (): boolean => true })),
+        readdirSync: vi.fn<() => string[]>(() => []),
     }
 })
 
@@ -74,7 +77,7 @@ interface TestTranslations {
 describe('I18nextService', () => {
     let i18nextService: I18nextService
     const asyncLocalStorage = {
-        getStore: vi.fn().mockReturnValue({ headers: { appLocale: LOCALE.uk } }),
+        getStore: vi.fn<() => { headers: { appLocale: string } }>().mockReturnValue({ headers: { appLocale: LOCALE.uk } }),
     } as unknown as AsyncLocalStorage<AlsData>
     const logger = mock<DiiaLogger>()
 

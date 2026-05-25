@@ -5,7 +5,7 @@ import { I18n, Replacements } from 'i18n'
 
 import { AlsData } from '@diia-inhouse/types'
 
-import { I18nKey, LOCALE } from '../interfaces/services/i18n'
+import { I18nKey, LOCALE } from '../interfaces/services/i18n.js'
 
 /**
  * @deprecated I18nService is deprecated. Use I18nextService instead.
@@ -58,7 +58,7 @@ export class I18nService<L = string> {
     get(key: I18nKey<L>, valuesToReplace?: Replacements, returnKeyIfNotFound = true): string {
         const locale = this.getLocaleFromStore()
 
-        // eslint-disable-next-line no-underscore-dangle
+        // oxlint-disable-next-line no-underscore-dangle
         const foundItem = this.i18n.__({ locale, phrase: key as string }, valuesToReplace || {})
 
         if (!foundItem && returnKeyIfNotFound) {

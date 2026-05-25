@@ -5,7 +5,7 @@ export const i18nextStubs = {
 }
 
 export const i18nextInstanceStubs = {
-    init: vi.fn().mockResolvedValue(),
+    init: vi.fn().mockResolvedValue(undefined),
     t: vi.fn(),
 }
 

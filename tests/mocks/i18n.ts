@@ -1,4 +1,4 @@
-/* eslint-disable no-underscore-dangle */
+/* oxlint-disable no-underscore-dangle */
 export const i18nStubs = {
     configure: vi.fn(),
     __: vi.fn(),

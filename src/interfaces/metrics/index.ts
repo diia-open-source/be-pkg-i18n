@@ -1,4 +1,4 @@
-import { LocaleType } from '../services/i18n'
+import { LocaleType } from '../services/i18n.js'
 
 export interface MissedLocaleKeysTotalLabelsMap {
     locale: LocaleType

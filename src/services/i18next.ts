@@ -7,8 +7,8 @@ import FsBackend, { FsBackendOptions } from 'i18next-fs-backend'
 
 import { AlsData, Logger } from '@diia-inhouse/types'
 
-import { LOCALE } from '../interfaces/services/i18n'
-import { missedInterpolationParamsTotalMetric, missedLocaleKeysTotalMetric } from '../metrics'
+import { LOCALE, LocaleType } from '../interfaces/services/i18n.js'
+import { missedInterpolationParamsTotalMetric, missedLocaleKeysTotalMetric } from '../metrics/index.js'
 
 type DotNestedKeys<T> = T extends object
     ? { [K in keyof T]: K extends string ? (T[K] extends object ? `${K}.${DotNestedKeys<T[K]>}` | K : K) : never }[keyof T & string]
@@ -22,7 +22,7 @@ export class I18nextService {
 
     constructor(
         private readonly localesDirectory = './dist/locales',
-        private readonly initOptions: Partial<i18next.InitOptions> = {},
+        private readonly initOptions: Partial<i18next.InitOptions> | undefined = {},
         private readonly asyncLocalStorage: AsyncLocalStorage<AlsData>,
         private readonly logger: Logger,
     ) {
@@ -58,10 +58,10 @@ export class I18nextService {
         return this.i18nextInstance
     }
 
-    private getLocaleFromStore(): string {
+    private getLocaleFromStore(): LocaleType {
         const store = this.asyncLocalStorage.getStore()
 
-        return store?.headers?.[this.headerName] || LOCALE.uk
+        return (store?.headers?.[this.headerName] as LocaleType) || LOCALE.uk
     }
 
     private initializeI18next(): i18next.i18n {
@@ -119,12 +119,11 @@ export class I18nextService {
         const namespaces: string[] = []
 
         try {
-            // eslint-disable-next-line security/detect-non-literal-fs-filename
-            const dirs = readdirSync(this.localesDirectory) // nosemgrep: eslint.detect-non-literal-fs-filename
+            // oxlint-disable-next-line security/detect-non-literal-fs-filename
+            const dirs = readdirSync(this.localesDirectory)
             const langDirs = dirs.filter(
-                (dir) =>
-                    // eslint-disable-next-line security/detect-non-literal-fs-filename
-                    lstatSync(path.join(this.localesDirectory, dir)).isDirectory(), // nosemgrep: eslint.detect-non-literal-fs-filename
+                // oxlint-disable-next-line security/detect-non-literal-fs-filename
+                (dir) => lstatSync(path.join(this.localesDirectory, dir)).isDirectory(),
             )
 
             for (const lang of langDirs) {
@@ -133,20 +132,20 @@ export class I18nextService {
                 this.findJsonFiles(langDir, namespaces)
             }
         } catch (err) {
-            this.logger.error(`Error finding namespaces: ${err}`)
+            this.logger.error(`Error finding namespaces: ${String(err)}`)
         }
 
         return namespaces
     }
 
     private findJsonFiles(dir: string, namespaces: string[], prefix = ''): void {
-        // eslint-disable-next-line security/detect-non-literal-fs-filename
-        const entries = readdirSync(dir) // nosemgrep: eslint.detect-non-literal-fs-filename
+        // oxlint-disable-next-line security/detect-non-literal-fs-filename
+        const entries = readdirSync(dir)
 
         for (const entry of entries) {
             const fullPath = path.join(dir, entry)
-            // eslint-disable-next-line security/detect-non-literal-fs-filename
-            const isDir = lstatSync(fullPath).isDirectory() // nosemgrep: eslint.detect-non-literal-fs-filename
+            // oxlint-disable-next-line security/detect-non-literal-fs-filename
+            const isDir = lstatSync(fullPath).isDirectory()
 
             if (isDir) {
                 this.findJsonFiles(fullPath, namespaces, `${prefix}${entry}/`)

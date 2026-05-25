@@ -1,3 +1,3 @@
-export * from './i18n'
+export * from './i18n.js'
 
-export * from './i18next'
+export * from './i18next.js'

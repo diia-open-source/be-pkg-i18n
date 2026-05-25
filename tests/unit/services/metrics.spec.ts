@@ -1,20 +1,20 @@
 import { AsyncLocalStorage } from 'node:async_hooks'
 
-import { LOCALE } from 'src/interfaces/services/i18n'
 import { beforeEach, describe, expect, it, vi } from 'vitest'
 import { mock } from 'vitest-mock-extended'
 
-import DiiaLogger from '@diia-inhouse/diia-logger'
+import { DiiaLogger } from '@diia-inhouse/diia-logger'
 import { ActionVersion, AlsData } from '@diia-inhouse/types'
 
-import { I18nextService, missedInterpolationParamsTotalMetric, missedLocaleKeysTotalMetric } from '../../../src'
+import { I18nextService, missedInterpolationParamsTotalMetric, missedLocaleKeysTotalMetric } from '../../../src/index.js'
+import { LOCALE } from '../../../src/interfaces/services/i18n.js'
 
-vi.mock('../../../src/metrics', () => ({
+vi.mock('../../../src/metrics/index.js', () => ({
     missedLocaleKeysTotalMetric: {
-        increment: vi.fn(),
+        increment: vi.fn<(labels: Record<string, string>) => void>(),
     },
     missedInterpolationParamsTotalMetric: {
-        increment: vi.fn(),
+        increment: vi.fn<(labels: Record<string, string>) => void>(),
     },
 }))
 

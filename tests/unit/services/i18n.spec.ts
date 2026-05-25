@@ -1,25 +1,26 @@
+/* oxlint-disable no-underscore-dangle */
 import { AsyncLocalStorage } from 'node:async_hooks'
 
-import { I18nService } from 'src'
-import { LOCALE } from 'src/interfaces/services/i18n'
 import { mock } from 'vitest-mock-extended'
 
 import { AlsData } from '@diia-inhouse/types'
 
+import { I18nService } from '../../../src/index.js'
+import { LOCALE } from '../../../src/interfaces/services/i18n.js'
+
 const mockI18nInstance = {
-    configure: vi.fn(),
-    __: vi.fn(),
-    setLocale: vi.fn(),
+    configure: vi.fn<(opts: unknown) => void>(),
+    __: vi.fn<(...args: unknown[]) => string>(),
+    setLocale: vi.fn<(locale: string) => string>(),
 }
 
 vi.mock('i18n', () => ({
-    // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
-    I18n: function () {
+    I18n: function (): typeof mockI18nInstance {
         return mockI18nInstance
     },
 }))
 
-describe(`${I18nService.name}`, () => {
+describe('I18nService', () => {
     const asyncLocalStorage = mock<AsyncLocalStorage<AlsData>>()
 
     beforeEach(() => {
@@ -47,7 +48,6 @@ describe(`${I18nService.name}`, () => {
 
         it('should return just found item', () => {
             vi.spyOn(asyncLocalStorage, 'getStore').mockReturnValue({ headers: { appLocale: LOCALE.uk } } as unknown as AlsData)
-            // eslint-disable-next-line no-underscore-dangle
             mockI18nInstance.__.mockReturnValue('value')
 
             const i18nService = new I18nService(asyncLocalStorage)
@@ -70,7 +70,6 @@ describe(`${I18nService.name}`, () => {
         it('should decode html text', () => {
             const i18nService = new I18nService(asyncLocalStorage)
 
-            // eslint-disable-next-line no-underscore-dangle
             mockI18nInstance.__.mockReturnValue('Дар&#39;я')
 
             expect(i18nService.get('key')).toBe("Дар'я")
