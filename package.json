@@ -1,6 +1,6 @@
 {
     "name": "@diia-inhouse/i18n",
-    "version": "3.1.16",
+    "version": "3.1.17",
     "type": "module",
     "description": "Internationalization package",
     "repository": "https://github.com/diia-open-source/be-pkg-i18n",
@@ -50,7 +50,7 @@
         "he": "1.2.0",
         "i18n": "0.15.3",
         "i18next": "25.8.13",
-        "i18next-fs-backend": "2.6.5",
+        "i18next-fs-backend": "2.6.6",
         "type-fest": "5.6.0"
     },
     "devDependencies": {
