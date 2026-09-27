@@ -1,6 +1,6 @@
 {
     "name": "@diia-inhouse/i18n",
-    "version": "3.1.69",
+    "version": "3.1.70",
     "type": "module",
     "description": "Internationalization package",
     "repository": "https://github.com/diia-open-source/be-pkg-i18n",
@@ -43,8 +43,8 @@
         "extends": "@diia-inhouse/configs/dist/semantic-release/package"
     },
     "dependencies": {
-        "@diia-inhouse/diia-logger": "4.5.1",
-        "@diia-inhouse/diia-metrics": "7.1.119",
+        "@diia-inhouse/diia-logger": "4.5.5",
+        "@diia-inhouse/diia-metrics": "7.1.124",
         "@types/i18n": "0.13.12",
         "glob": "13.0.6",
         "he": "1.2.0",
@@ -55,11 +55,11 @@
     },
     "devDependencies": {
         "@commitlint/cli": "20.4.2",
-        "@diia-inhouse/configs": "7.2.1",
-        "@diia-inhouse/eslint-config": "8.8.8",
-        "@diia-inhouse/oxc-config": "3.0.1",
-        "@diia-inhouse/test": "8.3.23",
-        "@diia-inhouse/types": "14.2.13",
+        "@diia-inhouse/configs": "7.2.2",
+        "@diia-inhouse/eslint-config": "8.8.9",
+        "@diia-inhouse/oxc-config": "3.0.3",
+        "@diia-inhouse/test": "8.3.26",
+        "@diia-inhouse/types": "14.2.14",
         "@types/he": "1.2.3",
         "@types/node": "25.6.2",
         "@vitest/coverage-v8": "4.1.11",
