@@ -155,7 +155,7 @@ describe('I18nextService', () => {
         })
 
         it('should return default locale when not set in AsyncLocalStorage', () => {
-            vi.spyOn(asyncLocalStorage, 'getStore').mockReturnValue({} as unknown as AlsData)
+            vi.spyOn(asyncLocalStorage, 'getStore').mockReturnValue({})
             const result = i18nextService.getLocale()
 
             expect(result).toBe(LOCALE.uk)
