@@ -35,7 +35,7 @@ describe('I18nextService Metrics', () => {
         mockAsyncLocalStorage.run(
             {
                 headers: {
-                    appLocale: 'en',
+                    acceptLanguage: 'en',
                     actionVersion: ActionVersion.V1,
                     traceId: 'test-trace-id',
                 },
@@ -57,7 +57,7 @@ describe('I18nextService Metrics', () => {
         mockAsyncLocalStorage.run(
             {
                 headers: {
-                    appLocale: LOCALE.uk,
+                    acceptLanguage: LOCALE.uk,
                     actionVersion: ActionVersion.V1,
                     traceId: 'test-trace-id',
                 },
@@ -79,7 +79,7 @@ describe('I18nextService Metrics', () => {
         mockAsyncLocalStorage.run(
             {
                 headers: {
-                    appLocale: LOCALE.en,
+                    acceptLanguage: LOCALE.en,
                     actionVersion: ActionVersion.V1,
                     traceId: 'test-trace-id',
                 },
@@ -104,7 +104,7 @@ describe('I18nextService Metrics', () => {
         mockAsyncLocalStorage.run(
             {
                 headers: {
-                    appLocale: LOCALE.uk,
+                    acceptLanguage: LOCALE.uk,
                     actionVersion: ActionVersion.V1,
                     traceId: 'test-trace-id',
                 },
@@ -126,7 +126,7 @@ describe('I18nextService Metrics', () => {
         mockAsyncLocalStorage.run(
             {
                 headers: {
-                    appLocale: LOCALE.uk,
+                    acceptLanguage: LOCALE.uk,
                     actionVersion: ActionVersion.V1,
                     traceId: 'test-trace-id',
                 },

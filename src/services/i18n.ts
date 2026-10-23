@@ -6,6 +6,7 @@ import { I18n, Replacements } from 'i18n'
 import { AlsData } from '@diia-inhouse/types'
 
 import { I18nKey, LOCALE } from '../interfaces/services/i18n.js'
+import { getSupportedLocale } from '../utils/locale.js'
 
 /**
  * @deprecated I18nService is deprecated. Use I18nextService instead.
@@ -30,8 +31,6 @@ import { I18nKey, LOCALE } from '../interfaces/services/i18n.js'
 export class I18nService<L = string> {
     private readonly i18n: I18n
 
-    private readonly headerName = 'appLocale'
-
     constructor(
         private readonly asyncLocalStorage: AsyncLocalStorage<AlsData>,
         localesDirectory = './dist/locales',
@@ -47,7 +46,6 @@ export class I18nService<L = string> {
             autoReload: false,
             updateFiles: false,
             objectNotation: true,
-            header: this.headerName,
             defaultLocale: LOCALE.uk,
         })
     }
@@ -78,8 +76,6 @@ export class I18nService<L = string> {
     }
 
     private getLocaleFromStore(): string {
-        const store = this.asyncLocalStorage.getStore()
-
-        return store?.headers?.[this.headerName] || ''
+        return getSupportedLocale(this.asyncLocalStorage.getStore()?.headers?.acceptLanguage) || ''
     }
 }

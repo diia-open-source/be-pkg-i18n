@@ -41,13 +41,12 @@ describe('I18nService', () => {
                 autoReload: false,
                 updateFiles: false,
                 objectNotation: true,
-                header: 'appLocale',
                 defaultLocale: LOCALE.uk,
             })
         })
 
         it('should return just found item', () => {
-            vi.spyOn(asyncLocalStorage, 'getStore').mockReturnValue({ headers: { appLocale: LOCALE.uk } } as unknown as AlsData)
+            vi.spyOn(asyncLocalStorage, 'getStore').mockReturnValue({ headers: { acceptLanguage: LOCALE.uk } } as unknown as AlsData)
             mockI18nInstance.__.mockReturnValue('value')
 
             const i18nService = new I18nService(asyncLocalStorage)
@@ -62,9 +61,40 @@ describe('I18nService', () => {
                 autoReload: false,
                 updateFiles: false,
                 objectNotation: true,
-                header: 'appLocale',
                 defaultLocale: LOCALE.uk,
             })
+        })
+
+        it('should use supported locale from acceptLanguage header', () => {
+            vi.spyOn(asyncLocalStorage, 'getStore').mockReturnValue({ headers: { acceptLanguage: LOCALE.en } } as unknown as AlsData)
+            mockI18nInstance.__.mockReturnValue('value')
+
+            const i18nService = new I18nService(asyncLocalStorage)
+
+            expect(i18nService.get('key')).toBe('value')
+            expect(mockI18nInstance.__).toHaveBeenCalledWith({ locale: LOCALE.en, phrase: 'key' }, {})
+        })
+
+        it('should ignore appLocale header', () => {
+            vi.spyOn(asyncLocalStorage, 'getStore').mockReturnValue({ headers: { appLocale: LOCALE.en } } as unknown as AlsData)
+            mockI18nInstance.__.mockReturnValue('value')
+
+            const i18nService = new I18nService(asyncLocalStorage)
+
+            i18nService.get('key')
+
+            expect(mockI18nInstance.__).toHaveBeenCalledWith({ locale: '', phrase: 'key' }, {})
+        })
+
+        it.each(['de', 'EN', 'en-US'])('should ignore not supported acceptLanguage header %s', (acceptLanguage) => {
+            vi.spyOn(asyncLocalStorage, 'getStore').mockReturnValue({ headers: { acceptLanguage } } as unknown as AlsData)
+            mockI18nInstance.__.mockReturnValue('value')
+
+            const i18nService = new I18nService(asyncLocalStorage)
+
+            i18nService.get('key')
+
+            expect(mockI18nInstance.__).toHaveBeenCalledWith({ locale: '', phrase: 'key' }, {})
         })
 
         it('should decode html text', () => {
@@ -78,7 +108,7 @@ describe('I18nService', () => {
 
     describe('getLocale', () => {
         it('should set and return locale', () => {
-            vi.spyOn(asyncLocalStorage, 'getStore').mockReturnValue({ headers: { appLocale: LOCALE.uk } } as unknown as AlsData)
+            vi.spyOn(asyncLocalStorage, 'getStore').mockReturnValue({ headers: { acceptLanguage: LOCALE.uk } } as unknown as AlsData)
             mockI18nInstance.setLocale.mockReturnValue('uk')
 
             const i18nService = new I18nService(asyncLocalStorage)
@@ -93,7 +123,6 @@ describe('I18nService', () => {
                 autoReload: false,
                 updateFiles: false,
                 objectNotation: true,
-                header: 'appLocale',
                 defaultLocale: LOCALE.uk,
             })
         })

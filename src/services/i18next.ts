@@ -9,6 +9,7 @@ import { AlsData, Logger } from '@diia-inhouse/types'
 
 import { LOCALE, LocaleType } from '../interfaces/services/i18n.js'
 import { missedInterpolationParamsTotalMetric, missedLocaleKeysTotalMetric } from '../metrics/index.js'
+import { getSupportedLocale } from '../utils/locale.js'
 
 type DotNestedKeys<T> = T extends object
     ? { [K in keyof T]: K extends string ? (T[K] extends object ? `${K}.${DotNestedKeys<T[K]>}` | K : K) : never }[keyof T & string]
@@ -18,7 +19,6 @@ export type TranslationFunction<TResource> = <K extends DotNestedKeys<TResource>
 
 export class I18nextService {
     private readonly i18nextInstance: i18next.i18n
-    private readonly headerName = 'appLocale'
 
     constructor(
         private readonly localesDirectory = './dist/locales',
@@ -59,9 +59,7 @@ export class I18nextService {
     }
 
     private getLocaleFromStore(): LocaleType {
-        const store = this.asyncLocalStorage.getStore()
-
-        return (store?.headers?.[this.headerName] as LocaleType) || LOCALE.uk
+        return getSupportedLocale(this.asyncLocalStorage.getStore()?.headers?.acceptLanguage) || LOCALE.uk
     }
 
     private initializeI18next(): i18next.i18n {
