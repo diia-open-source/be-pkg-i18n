@@ -1,6 +1,6 @@
 {
     "name": "@diia-inhouse/i18n",
-    "version": "3.2.0",
+    "version": "3.2.1",
     "description": "Internationalization package",
     "license": "SEE LICENSE IN LICENSE.md",
     "author": "diia-team",
@@ -31,8 +31,8 @@
         "test:watch": "vitest watch"
     },
     "dependencies": {
-        "@diia-inhouse/diia-logger": "4.7.24",
-        "@diia-inhouse/diia-metrics": "7.1.150",
+        "@diia-inhouse/diia-logger": "4.7.27",
+        "@diia-inhouse/diia-metrics": "7.1.154",
         "@types/i18n": "0.13.12",
         "glob": "13.0.6",
         "he": "1.2.0",
