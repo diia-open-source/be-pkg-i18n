@@ -1,10 +1,10 @@
-import { LocaleType } from '../services/i18n.js'
+import { Language } from '@diia-inhouse/types'
 
 export interface MissedLocaleKeysTotalLabelsMap {
-    locale: LocaleType
+    locale: Language
     status: 'missing' | 'fallback_used'
 }
 
 export interface MissedInterpolationParamsTotalLabelsMap {
-    locale: LocaleType
+    locale: Language
 }

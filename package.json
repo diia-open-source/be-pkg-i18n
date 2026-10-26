@@ -1,6 +1,6 @@
 {
     "name": "@diia-inhouse/i18n",
-    "version": "3.2.1",
+    "version": "3.3.0",
     "description": "Internationalization package",
     "license": "SEE LICENSE IN LICENSE.md",
     "author": "diia-team",
@@ -46,7 +46,7 @@
         "@diia-inhouse/configs": "7.2.2",
         "@diia-inhouse/oxc-config": "4.0.3",
         "@diia-inhouse/test": "8.3.43",
-        "@diia-inhouse/types": "14.7.2",
+        "@diia-inhouse/types": "14.8.0",
         "@types/he": "1.2.3",
         "@types/node": "25.6.2",
         "@vitest/coverage-v8": "4.1.11",
@@ -64,7 +64,7 @@
         "vitest-mock-extended": "4.0.0"
     },
     "peerDependencies": {
-        "@diia-inhouse/types": ">=13.1.0"
+        "@diia-inhouse/types": ">=14.8.0"
     },
     "commitlint": {
         "extends": "@diia-inhouse/configs/dist/commitlint"

@@ -4,9 +4,8 @@ import { beforeEach, describe, expect, it, vi } from 'vitest'
 import { mock } from 'vitest-mock-extended'
 
 import { DiiaLogger } from '@diia-inhouse/diia-logger'
-import { AlsData } from '@diia-inhouse/types'
+import { AlsData, Languages } from '@diia-inhouse/types'
 
-import { LOCALE } from '../../../src/interfaces/services/i18n.js'
 import { I18nextService } from '../../../src/services/i18next.js'
 
 type TOptions = { ns?: string; lng?: string } | undefined
@@ -77,7 +76,7 @@ interface TestTranslations {
 describe('I18nextService', () => {
     let i18nextService: I18nextService
     const asyncLocalStorage = {
-        getStore: vi.fn<() => { headers: { acceptLanguage: string } }>().mockReturnValue({ headers: { acceptLanguage: LOCALE.uk } }),
+        getStore: vi.fn<() => { headers: { acceptLanguage: string } }>().mockReturnValue({ headers: { acceptLanguage: Languages.Uk } }),
     } as unknown as AsyncLocalStorage<AlsData>
     const logger = mock<DiiaLogger>()
 
@@ -97,7 +96,7 @@ describe('I18nextService', () => {
                 'some.key',
                 expect.objectContaining({
                     ns: 'test/namespace',
-                    lng: LOCALE.uk,
+                    lng: Languages.Uk,
                 }),
             )
             expect(result).toBe('translated[test/namespace](uk):some.key')
@@ -112,7 +111,7 @@ describe('I18nextService', () => {
                 'some.key',
                 expect.objectContaining({
                     ns: 'test/namespace',
-                    lng: LOCALE.uk,
+                    lng: Languages.Uk,
                     count: 2,
                     context: 'special',
                 }),
@@ -127,18 +126,18 @@ describe('I18nextService', () => {
             expect(mockInstance.t).toHaveBeenCalledWith(
                 'common.key',
                 expect.objectContaining({
-                    lng: LOCALE.uk,
+                    lng: Languages.Uk,
                 }),
             )
             expect(result).toBe('translated(uk):common.key')
         })
 
         it('should translate keys using locale from acceptLanguage header', () => {
-            vi.spyOn(asyncLocalStorage, 'getStore').mockReturnValue({ headers: { acceptLanguage: LOCALE.en } } as unknown as AlsData)
+            vi.spyOn(asyncLocalStorage, 'getStore').mockReturnValue({ headers: { acceptLanguage: Languages.En } } as unknown as AlsData)
 
             const result = i18nextService.get('common.key')
 
-            expect(mockInstance.t).toHaveBeenCalledWith('common.key', expect.objectContaining({ lng: LOCALE.en }))
+            expect(mockInstance.t).toHaveBeenCalledWith('common.key', expect.objectContaining({ lng: Languages.En }))
             expect(result).toBe('translated(en):common.key')
         })
 
@@ -148,7 +147,7 @@ describe('I18nextService', () => {
             expect(mockInstance.t).toHaveBeenCalledWith(
                 'common.key',
                 expect.objectContaining({
-                    lng: LOCALE.uk,
+                    lng: Languages.Uk,
                     count: 3,
                 }),
             )
@@ -157,31 +156,31 @@ describe('I18nextService', () => {
 
     describe('getLocale', () => {
         it('should return supported locale from acceptLanguage header', () => {
-            vi.spyOn(asyncLocalStorage, 'getStore').mockReturnValue({ headers: { acceptLanguage: LOCALE.en } } as unknown as AlsData)
+            vi.spyOn(asyncLocalStorage, 'getStore').mockReturnValue({ headers: { acceptLanguage: Languages.En } } as unknown as AlsData)
             const result = i18nextService.getLocale()
 
-            expect(result).toBe(LOCALE.en)
+            expect(result).toBe(Languages.En)
         })
 
         it('should return default locale when not set in AsyncLocalStorage', () => {
             vi.spyOn(asyncLocalStorage, 'getStore').mockReturnValue({})
             const result = i18nextService.getLocale()
 
-            expect(result).toBe(LOCALE.uk)
+            expect(result).toBe(Languages.Uk)
         })
 
         it('should ignore appLocale header', () => {
-            vi.spyOn(asyncLocalStorage, 'getStore').mockReturnValue({ headers: { appLocale: LOCALE.en } } as unknown as AlsData)
+            vi.spyOn(asyncLocalStorage, 'getStore').mockReturnValue({ headers: { appLocale: Languages.En } } as unknown as AlsData)
             const result = i18nextService.getLocale()
 
-            expect(result).toBe(LOCALE.uk)
+            expect(result).toBe(Languages.Uk)
         })
 
         it.each(['de', 'EN', 'en-US'])('should return default locale when acceptLanguage header %s is not supported', (acceptLanguage) => {
             vi.spyOn(asyncLocalStorage, 'getStore').mockReturnValue({ headers: { acceptLanguage } } as unknown as AlsData)
             const result = i18nextService.getLocale()
 
-            expect(result).toBe(LOCALE.uk)
+            expect(result).toBe(Languages.Uk)
         })
     })
 })

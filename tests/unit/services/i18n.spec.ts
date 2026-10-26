@@ -3,10 +3,9 @@ import { AsyncLocalStorage } from 'node:async_hooks'
 
 import { mock } from 'vitest-mock-extended'
 
-import { AlsData } from '@diia-inhouse/types'
+import { AlsData, Languages } from '@diia-inhouse/types'
 
 import { I18nService } from '../../../src/index.js'
-import { LOCALE } from '../../../src/interfaces/services/i18n.js'
 
 const mockI18nInstance = {
     configure: vi.fn<(opts: unknown) => void>(),
@@ -35,18 +34,18 @@ describe('I18nService', () => {
             expect(mockI18nInstance.configure).toHaveBeenCalledWith({
                 directory: './dist/locales',
                 fallbacks: {
-                    'en-*': LOCALE.en,
-                    'uk-*': LOCALE.uk,
+                    'en-*': Languages.En,
+                    'uk-*': Languages.Uk,
                 },
                 autoReload: false,
                 updateFiles: false,
                 objectNotation: true,
-                defaultLocale: LOCALE.uk,
+                defaultLocale: Languages.Uk,
             })
         })
 
         it('should return just found item', () => {
-            vi.spyOn(asyncLocalStorage, 'getStore').mockReturnValue({ headers: { acceptLanguage: LOCALE.uk } } as unknown as AlsData)
+            vi.spyOn(asyncLocalStorage, 'getStore').mockReturnValue({ headers: { acceptLanguage: Languages.Uk } } as unknown as AlsData)
             mockI18nInstance.__.mockReturnValue('value')
 
             const i18nService = new I18nService(asyncLocalStorage)
@@ -55,28 +54,28 @@ describe('I18nService', () => {
             expect(mockI18nInstance.configure).toHaveBeenCalledWith({
                 directory: './dist/locales',
                 fallbacks: {
-                    'en-*': LOCALE.en,
-                    'uk-*': LOCALE.uk,
+                    'en-*': Languages.En,
+                    'uk-*': Languages.Uk,
                 },
                 autoReload: false,
                 updateFiles: false,
                 objectNotation: true,
-                defaultLocale: LOCALE.uk,
+                defaultLocale: Languages.Uk,
             })
         })
 
         it('should use supported locale from acceptLanguage header', () => {
-            vi.spyOn(asyncLocalStorage, 'getStore').mockReturnValue({ headers: { acceptLanguage: LOCALE.en } } as unknown as AlsData)
+            vi.spyOn(asyncLocalStorage, 'getStore').mockReturnValue({ headers: { acceptLanguage: Languages.En } } as unknown as AlsData)
             mockI18nInstance.__.mockReturnValue('value')
 
             const i18nService = new I18nService(asyncLocalStorage)
 
             expect(i18nService.get('key')).toBe('value')
-            expect(mockI18nInstance.__).toHaveBeenCalledWith({ locale: LOCALE.en, phrase: 'key' }, {})
+            expect(mockI18nInstance.__).toHaveBeenCalledWith({ locale: Languages.En, phrase: 'key' }, {})
         })
 
         it('should ignore appLocale header', () => {
-            vi.spyOn(asyncLocalStorage, 'getStore').mockReturnValue({ headers: { appLocale: LOCALE.en } } as unknown as AlsData)
+            vi.spyOn(asyncLocalStorage, 'getStore').mockReturnValue({ headers: { appLocale: Languages.En } } as unknown as AlsData)
             mockI18nInstance.__.mockReturnValue('value')
 
             const i18nService = new I18nService(asyncLocalStorage)
@@ -108,7 +107,7 @@ describe('I18nService', () => {
 
     describe('getLocale', () => {
         it('should set and return locale', () => {
-            vi.spyOn(asyncLocalStorage, 'getStore').mockReturnValue({ headers: { acceptLanguage: LOCALE.uk } } as unknown as AlsData)
+            vi.spyOn(asyncLocalStorage, 'getStore').mockReturnValue({ headers: { acceptLanguage: Languages.Uk } } as unknown as AlsData)
             mockI18nInstance.setLocale.mockReturnValue('uk')
 
             const i18nService = new I18nService(asyncLocalStorage)
@@ -117,13 +116,13 @@ describe('I18nService', () => {
             expect(mockI18nInstance.configure).toHaveBeenCalledWith({
                 directory: './dist/locales',
                 fallbacks: {
-                    'en-*': LOCALE.en,
-                    'uk-*': LOCALE.uk,
+                    'en-*': Languages.En,
+                    'uk-*': Languages.Uk,
                 },
                 autoReload: false,
                 updateFiles: false,
                 objectNotation: true,
-                defaultLocale: LOCALE.uk,
+                defaultLocale: Languages.Uk,
             })
         })
     })

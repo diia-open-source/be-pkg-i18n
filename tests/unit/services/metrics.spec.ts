@@ -4,10 +4,9 @@ import { beforeEach, describe, expect, it, vi } from 'vitest'
 import { mock } from 'vitest-mock-extended'
 
 import { DiiaLogger } from '@diia-inhouse/diia-logger'
-import { ActionVersion, AlsData } from '@diia-inhouse/types'
+import { ActionVersion, AlsData, Languages } from '@diia-inhouse/types'
 
 import { I18nextService, missedInterpolationParamsTotalMetric, missedLocaleKeysTotalMetric } from '../../../src/index.js'
-import { LOCALE } from '../../../src/interfaces/services/i18n.js'
 
 vi.mock('../../../src/metrics/index.js', () => ({
     missedLocaleKeysTotalMetric: {
@@ -57,7 +56,7 @@ describe('I18nextService Metrics', () => {
         mockAsyncLocalStorage.run(
             {
                 headers: {
-                    acceptLanguage: LOCALE.uk,
+                    acceptLanguage: Languages.Uk,
                     actionVersion: ActionVersion.V1,
                     traceId: 'test-trace-id',
                 },
@@ -79,7 +78,7 @@ describe('I18nextService Metrics', () => {
         mockAsyncLocalStorage.run(
             {
                 headers: {
-                    acceptLanguage: LOCALE.en,
+                    acceptLanguage: Languages.En,
                     actionVersion: ActionVersion.V1,
                     traceId: 'test-trace-id',
                 },
@@ -104,7 +103,7 @@ describe('I18nextService Metrics', () => {
         mockAsyncLocalStorage.run(
             {
                 headers: {
-                    acceptLanguage: LOCALE.uk,
+                    acceptLanguage: Languages.Uk,
                     actionVersion: ActionVersion.V1,
                     traceId: 'test-trace-id',
                 },
@@ -117,7 +116,7 @@ describe('I18nextService Metrics', () => {
         )
 
         expect(mockLogger.error).toHaveBeenCalledWith(expect.stringContaining('Missing interpolation parameter: name'))
-        expect(missedInterpolationParamsTotalMetric.increment).toHaveBeenCalledWith({ locale: LOCALE.uk })
+        expect(missedInterpolationParamsTotalMetric.increment).toHaveBeenCalledWith({ locale: Languages.Uk })
     })
 
     it('should not increment missing interpolation metric when parameter is provided', () => {
@@ -126,7 +125,7 @@ describe('I18nextService Metrics', () => {
         mockAsyncLocalStorage.run(
             {
                 headers: {
-                    acceptLanguage: LOCALE.uk,
+                    acceptLanguage: Languages.Uk,
                     actionVersion: ActionVersion.V1,
                     traceId: 'test-trace-id',
                 },

@@ -1,5 +1,5 @@
-import { LOCALE, LocaleType } from '../interfaces/services/i18n.js'
+import { Language, Languages } from '@diia-inhouse/types'
 
-export function getSupportedLocale(value?: string): LocaleType | undefined {
-    return Object.values(LOCALE).find((locale) => locale === value)
+export function getSupportedLocale(value?: string): Language | undefined {
+    return Object.values(Languages).find((locale) => locale === value)
 }

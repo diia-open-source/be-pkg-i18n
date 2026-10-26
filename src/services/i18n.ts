@@ -3,9 +3,9 @@ import { AsyncLocalStorage } from 'node:async_hooks'
 import he from 'he'
 import { I18n, Replacements } from 'i18n'
 
-import { AlsData } from '@diia-inhouse/types'
+import { AlsData, Languages } from '@diia-inhouse/types'
 
-import { I18nKey, LOCALE } from '../interfaces/services/i18n.js'
+import { I18nKey } from '../interfaces/services/i18n.js'
 import { getSupportedLocale } from '../utils/locale.js'
 
 /**
@@ -40,13 +40,13 @@ export class I18nService<L = string> {
         this.i18n.configure({
             directory: localesDirectory,
             fallbacks: {
-                'en-*': LOCALE.en,
-                'uk-*': LOCALE.uk,
+                'en-*': Languages.En,
+                'uk-*': Languages.Uk,
             },
             autoReload: false,
             updateFiles: false,
             objectNotation: true,
-            defaultLocale: LOCALE.uk,
+            defaultLocale: Languages.Uk,
         })
     }
 

@@ -5,9 +5,8 @@ import path from 'node:path'
 import * as i18next from 'i18next'
 import FsBackend, { FsBackendOptions } from 'i18next-fs-backend'
 
-import { AlsData, Logger } from '@diia-inhouse/types'
+import { AlsData, Language, Languages, Logger } from '@diia-inhouse/types'
 
-import { LOCALE, LocaleType } from '../interfaces/services/i18n.js'
 import { missedInterpolationParamsTotalMetric, missedLocaleKeysTotalMetric } from '../metrics/index.js'
 import { getSupportedLocale } from '../utils/locale.js'
 
@@ -58,8 +57,8 @@ export class I18nextService {
         return this.i18nextInstance
     }
 
-    private getLocaleFromStore(): LocaleType {
-        return getSupportedLocale(this.asyncLocalStorage.getStore()?.headers?.acceptLanguage) || LOCALE.uk
+    private getLocaleFromStore(): Language {
+        return getSupportedLocale(this.asyncLocalStorage.getStore()?.headers?.acceptLanguage) || Languages.Uk
     }
 
     private initializeI18next(): i18next.i18n {
@@ -68,8 +67,8 @@ export class I18nextService {
         this.logger.info(`Found namespaces: ${namespaces.join(', ')}`)
 
         const defaultOptions: Partial<i18next.InitOptions> = {
-            fallbackLng: LOCALE.uk,
-            lng: LOCALE.uk,
+            fallbackLng: Languages.Uk,
+            lng: Languages.Uk,
             returnEmptyString: false,
             returnNull: false,
             returnObjects: true,
