@@ -1,6 +1,6 @@
 {
     "name": "@diia-inhouse/i18n",
-    "version": "3.3.0",
+    "version": "3.3.1",
     "description": "Internationalization package",
     "license": "SEE LICENSE IN LICENSE.md",
     "author": "diia-team",
@@ -31,8 +31,8 @@
         "test:watch": "vitest watch"
     },
     "dependencies": {
-        "@diia-inhouse/diia-logger": "4.7.27",
-        "@diia-inhouse/diia-metrics": "7.1.154",
+        "@diia-inhouse/diia-logger": "4.7.28",
+        "@diia-inhouse/diia-metrics": "7.1.155",
         "@types/i18n": "0.13.12",
         "glob": "13.0.6",
         "he": "1.2.0",
@@ -43,10 +43,10 @@
     },
     "devDependencies": {
         "@commitlint/cli": "20.4.2",
-        "@diia-inhouse/configs": "7.2.2",
+        "@diia-inhouse/configs": "7.2.3",
         "@diia-inhouse/oxc-config": "4.0.3",
-        "@diia-inhouse/test": "8.3.43",
-        "@diia-inhouse/types": "14.8.0",
+        "@diia-inhouse/test": "8.3.44",
+        "@diia-inhouse/types": "14.9.1",
         "@types/he": "1.2.3",
         "@types/node": "25.6.2",
         "@vitest/coverage-v8": "4.1.11",
