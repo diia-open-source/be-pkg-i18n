@@ -4,9 +4,10 @@ import { beforeEach, describe, expect, it, vi } from 'vitest'
 import { mock } from 'vitest-mock-extended'
 
 import { DiiaLogger } from '@diia-inhouse/diia-logger'
-import { AlsData, Languages } from '@diia-inhouse/types'
+import { AlsData, Languages, WithLocales } from '@diia-inhouse/types'
 
 import { I18nextService } from '../../../src/services/i18next.js'
+import { TemplateLocale } from './i18next.types.js'
 
 type TOptions = { ns?: string; lng?: string } | undefined
 
@@ -181,6 +182,79 @@ describe('I18nextService', () => {
             const result = i18nextService.getLocale()
 
             expect(result).toBe(Languages.Uk)
+        })
+    })
+
+    describe('getLocalized', () => {
+        const ukLocale: TemplateLocale = { text: 'текст', description: 'опис' }
+        const enLocale: TemplateLocale = { text: 'text' }
+        const template: WithLocales<TemplateLocale> = { locales: { [Languages.Uk]: ukLocale, [Languages.En]: enLocale } }
+        const ukOnlyTemplate: WithLocales<TemplateLocale> = { locales: { [Languages.Uk]: ukLocale } }
+
+        describe('without key', () => {
+            it('should return locale for requested language', () => {
+                expect(i18nextService.getLocalized(template, undefined, Languages.En)).toBe(enLocale)
+            })
+
+            it('should fall back to Ukrainian locale when requested language is missing', () => {
+                expect(i18nextService.getLocalized(ukOnlyTemplate, undefined, Languages.En)).toBe(ukLocale)
+            })
+
+            it('should use locale from acceptLanguage header when language is not provided', () => {
+                vi.spyOn(asyncLocalStorage, 'getStore').mockReturnValue({ headers: { acceptLanguage: Languages.En } } as unknown as AlsData)
+
+                expect(i18nextService.getLocalized(template)).toBe(enLocale)
+            })
+        })
+
+        describe('with key', () => {
+            it('should return value for requested language', () => {
+                expect(i18nextService.getLocalized(template, 'text', Languages.En)).toBe(enLocale.text)
+            })
+
+            it('should fall back to Ukrainian value when requested language is missing', () => {
+                expect(i18nextService.getLocalized(ukOnlyTemplate, 'text', Languages.En)).toBe(ukLocale.text)
+            })
+
+            it('should fall back to Ukrainian value when requested language has no value for key', () => {
+                expect(i18nextService.getLocalized(template, 'description', Languages.En)).toBe(ukLocale.description)
+            })
+
+            it('should use locale from acceptLanguage header when language is not provided', () => {
+                vi.spyOn(asyncLocalStorage, 'getStore').mockReturnValue({ headers: { acceptLanguage: Languages.En } } as unknown as AlsData)
+
+                expect(i18nextService.getLocalized(template, 'text')).toBe(enLocale.text)
+            })
+        })
+    })
+
+    describe('defaultLocale', () => {
+        const ukLocale: TemplateLocale = { text: 'текст' }
+        const enLocale: TemplateLocale = { text: 'text', description: 'description' }
+        const template: WithLocales<TemplateLocale> = { locales: { [Languages.Uk]: ukLocale, [Languages.En]: enLocale } }
+
+        beforeEach(() => {
+            i18nextService = new I18nextService(localesDirectory, {}, asyncLocalStorage, logger, Languages.En)
+        })
+
+        it('should initialize i18next with default locale', () => {
+            expect(mockInstance.init).toHaveBeenLastCalledWith(expect.objectContaining({ lng: Languages.En, fallbackLng: Languages.En }))
+        })
+
+        it('should return default locale when not set in AsyncLocalStorage', () => {
+            vi.spyOn(asyncLocalStorage, 'getStore').mockReturnValue({})
+
+            expect(i18nextService.getLocale()).toBe(Languages.En)
+        })
+
+        it('should use default locale in getLocalized when language is not provided and not set in AsyncLocalStorage', () => {
+            vi.spyOn(asyncLocalStorage, 'getStore').mockReturnValue({})
+
+            expect(i18nextService.getLocalized(template)).toBe(enLocale)
+        })
+
+        it('should fall back to default locale value in getLocalized when requested language has no value for key', () => {
+            expect(i18nextService.getLocalized(template, 'description', Languages.Uk)).toBe(enLocale.description)
         })
     })
 })

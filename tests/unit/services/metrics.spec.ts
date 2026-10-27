@@ -4,7 +4,7 @@ import { beforeEach, describe, expect, it, vi } from 'vitest'
 import { mock } from 'vitest-mock-extended'
 
 import { DiiaLogger } from '@diia-inhouse/diia-logger'
-import { ActionVersion, AlsData, Languages } from '@diia-inhouse/types'
+import { ActionVersion, AlsData, Languages, WithLocales } from '@diia-inhouse/types'
 
 import { I18nextService, missedInterpolationParamsTotalMetric, missedLocaleKeysTotalMetric } from '../../../src/index.js'
 
@@ -139,5 +139,73 @@ describe('I18nextService Metrics', () => {
         )
 
         expect(missedInterpolationParamsTotalMetric.increment).not.toHaveBeenCalled()
+    })
+
+    describe('getLocalized', () => {
+        interface TemplateLocale {
+            text: string
+            description?: string
+        }
+
+        const template: WithLocales<TemplateLocale> = { locales: { [Languages.Uk]: { text: 'текст' }, [Languages.En]: { text: 'text' } } }
+
+        beforeEach(() => {
+            i18nextService = new I18nextService('./tests/locales', {}, mockAsyncLocalStorage, mockLogger)
+        })
+
+        it('should increment missing metric when there is no value for key in requested and Ukrainian locales', () => {
+            const result = i18nextService.getLocalized(template, 'description', Languages.En)
+
+            expect(result).toBeUndefined()
+            expect(mockLogger.error).toHaveBeenCalledWith('Missing localized value', { locale: Languages.En, key: 'description' })
+            expect(missedLocaleKeysTotalMetric.increment).toHaveBeenCalledTimes(1)
+            expect(missedLocaleKeysTotalMetric.increment).toHaveBeenCalledWith({ locale: Languages.En, status: 'missing' })
+        })
+
+        it('should increment missing metric when there are no requested and Ukrainian locales', () => {
+            const result = i18nextService.getLocalized({ locales: {} } as WithLocales<TemplateLocale>, undefined, Languages.En)
+
+            expect(result).toBeUndefined()
+            expect(mockLogger.error).toHaveBeenCalledWith('Missing localized value', { locale: Languages.En, key: undefined })
+            expect(missedLocaleKeysTotalMetric.increment).toHaveBeenCalledTimes(1)
+            expect(missedLocaleKeysTotalMetric.increment).toHaveBeenCalledWith({ locale: Languages.En, status: 'missing' })
+        })
+
+        it('should increment fallback used metric when requested locale is missing', () => {
+            const ukOnlyTemplate: WithLocales<TemplateLocale> = { locales: { [Languages.Uk]: { text: 'текст' } } }
+
+            i18nextService.getLocalized(ukOnlyTemplate, undefined, Languages.En)
+
+            expect(missedLocaleKeysTotalMetric.increment).toHaveBeenCalledTimes(1)
+            expect(missedLocaleKeysTotalMetric.increment).toHaveBeenCalledWith({ locale: Languages.En, status: 'fallback_used' })
+            expect(mockLogger.error).not.toHaveBeenCalled()
+        })
+
+        it('should increment fallback used metric when requested locale is missing and key is provided', () => {
+            const ukOnlyTemplate: WithLocales<TemplateLocale> = { locales: { [Languages.Uk]: { text: 'текст' } } }
+
+            i18nextService.getLocalized(ukOnlyTemplate, 'text', Languages.En)
+
+            expect(missedLocaleKeysTotalMetric.increment).toHaveBeenCalledTimes(1)
+            expect(missedLocaleKeysTotalMetric.increment).toHaveBeenCalledWith({ locale: Languages.En, status: 'fallback_used' })
+            expect(mockLogger.error).not.toHaveBeenCalled()
+        })
+
+        it('should increment fallback used metric when requested locale has no value for key', () => {
+            const result = i18nextService.getLocalized(
+                { locales: { [Languages.Uk]: { text: 'текст', description: 'опис' }, [Languages.En]: { text: 'text' } } },
+                'description',
+                Languages.En,
+            )
+
+            expect(result).toBe('опис')
+            expect(missedLocaleKeysTotalMetric.increment).toHaveBeenCalledWith({ locale: Languages.En, status: 'fallback_used' })
+        })
+
+        it('should not increment metric when value exists in requested locale', () => {
+            i18nextService.getLocalized(template, 'text', Languages.En)
+
+            expect(missedLocaleKeysTotalMetric.increment).not.toHaveBeenCalled()
+        })
     })
 })

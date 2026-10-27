@@ -5,7 +5,7 @@ import path from 'node:path'
 import * as i18next from 'i18next'
 import FsBackend, { FsBackendOptions } from 'i18next-fs-backend'
 
-import { AlsData, Language, Languages, Logger } from '@diia-inhouse/types'
+import { AlsData, Language, Languages, Logger, WithLocales } from '@diia-inhouse/types'
 
 import { missedInterpolationParamsTotalMetric, missedLocaleKeysTotalMetric } from '../metrics/index.js'
 import { getSupportedLocale } from '../utils/locale.js'
@@ -24,6 +24,7 @@ export class I18nextService {
         private readonly initOptions: Partial<i18next.InitOptions> | undefined = {},
         private readonly asyncLocalStorage: AsyncLocalStorage<AlsData>,
         private readonly logger: Logger,
+        private readonly defaultLocale: Language = Languages.Uk,
     ) {
         this.i18nextInstance = this.initializeI18next()
     }
@@ -53,12 +54,39 @@ export class I18nextService {
         return this.getLocaleFromStore()
     }
 
+    getLocalized<T>(entity: WithLocales<T>, key?: undefined, language?: Language): T
+
+    getLocalized<T, K extends keyof T>(entity: WithLocales<T>, key: K, language?: Language): T[K]
+
+    getLocalized<T, K extends keyof T>(
+        { locales }: WithLocales<T>,
+        key?: K,
+        language: Language = this.getLocaleFromStore(),
+    ): T | T[K] | undefined {
+        const getValue = (locale: T | undefined): T | T[K] | undefined => (key === undefined ? locale : locale?.[key])
+
+        const value = getValue(locales[language])
+        if (value !== undefined && value !== null) {
+            return value
+        }
+
+        const fallbackValue = getValue(locales[this.defaultLocale])
+        if (fallbackValue === undefined || fallbackValue === null) {
+            missedLocaleKeysTotalMetric.increment({ locale: language, status: 'missing' })
+            this.logger.error('Missing localized value', { locale: language, key })
+        } else {
+            missedLocaleKeysTotalMetric.increment({ locale: language, status: 'fallback_used' })
+        }
+
+        return fallbackValue
+    }
+
     getInstance(): i18next.i18n {
         return this.i18nextInstance
     }
 
     private getLocaleFromStore(): Language {
-        return getSupportedLocale(this.asyncLocalStorage.getStore()?.headers?.acceptLanguage) || Languages.Uk
+        return getSupportedLocale(this.asyncLocalStorage.getStore()?.headers?.acceptLanguage) || this.defaultLocale
     }
 
     private initializeI18next(): i18next.i18n {
@@ -67,8 +95,8 @@ export class I18nextService {
         this.logger.info(`Found namespaces: ${namespaces.join(', ')}`)
 
         const defaultOptions: Partial<i18next.InitOptions> = {
-            fallbackLng: Languages.Uk,
-            lng: Languages.Uk,
+            fallbackLng: this.defaultLocale,
+            lng: this.defaultLocale,
             returnEmptyString: false,
             returnNull: false,
             returnObjects: true,
