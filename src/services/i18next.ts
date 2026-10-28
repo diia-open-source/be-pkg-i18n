@@ -50,7 +50,7 @@ export class I18nextService {
         })
     }
 
-    getLocale(): string {
+    getLocale(): Language {
         return this.getLocaleFromStore()
     }
 
