@@ -9,12 +9,7 @@ import { AlsData, Language, Languages, Logger, WithLocales } from '@diia-inhouse
 
 import { missedInterpolationParamsTotalMetric, missedLocaleKeysTotalMetric } from '../metrics/index.js'
 import { getSupportedLocale } from '../utils/locale.js'
-
-type DotNestedKeys<T> = T extends object
-    ? { [K in keyof T]: K extends string ? (T[K] extends object ? `${K}.${DotNestedKeys<T[K]>}` | K : K) : never }[keyof T & string]
-    : ''
-
-export type TranslationFunction<TResource> = <K extends DotNestedKeys<TResource>>(key: K, options?: i18next.TOptions) => string
+import { TranslationFunction, LocalesDirectoryContent, DotNestedKeys } from './i18next.types.js'
 
 export class I18nextService {
     private readonly i18nextInstance: i18next.i18n
@@ -90,13 +85,14 @@ export class I18nextService {
     }
 
     private initializeI18next(): i18next.i18n {
-        const namespaces = this.findAllNamespaces()
+        const { languages, namespaces } = this.findLanguagesAndNamespaces()
 
         this.logger.info(`Found namespaces: ${namespaces.join(', ')}`)
 
         const defaultOptions: Partial<i18next.InitOptions> = {
             fallbackLng: this.defaultLocale,
             lng: this.defaultLocale,
+            preload: languages,
             returnEmptyString: false,
             returnNull: false,
             returnObjects: true,
@@ -140,7 +136,8 @@ export class I18nextService {
         return instance
     }
 
-    private findAllNamespaces(): string[] {
+    private findLanguagesAndNamespaces(): LocalesDirectoryContent {
+        const languages: string[] = []
         const namespaces: string[] = []
 
         try {
@@ -154,13 +151,14 @@ export class I18nextService {
             for (const lang of langDirs) {
                 const langDir = path.join(this.localesDirectory, lang)
 
+                languages.push(lang)
                 this.findJsonFiles(langDir, namespaces)
             }
         } catch (err) {
             this.logger.error(`Error finding namespaces: ${String(err)}`)
         }
 
-        return namespaces
+        return { languages, namespaces }
     }
 
     private findJsonFiles(dir: string, namespaces: string[], prefix = ''): void {
