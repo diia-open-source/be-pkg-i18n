@@ -1,6 +1,6 @@
 {
     "name": "@diia-inhouse/i18n",
-    "version": "3.8.1",
+    "version": "3.8.2",
     "description": "Internationalization package",
     "license": "SEE LICENSE IN LICENSE.md",
     "author": "diia-team",
@@ -48,7 +48,7 @@
         "@diia-inhouse/oxc-config": "4.0.3",
         "@diia-inhouse/test": "8.4.10",
         "@diia-inhouse/types": "14.12.3",
-        "@diia-inhouse/validators": "2.2.137",
+        "@diia-inhouse/validators": "2.2.138",
         "@types/he": "1.2.3",
         "@types/node": "25.6.2",
         "@vitest/coverage-v8": "4.1.11",
