@@ -1,6 +1,6 @@
 {
     "name": "@diia-inhouse/i18n",
-    "version": "3.8.9",
+    "version": "3.9.0",
     "description": "Internationalization package",
     "license": "SEE LICENSE IN LICENSE.md",
     "author": "diia-team",
@@ -32,13 +32,9 @@
     "dependencies": {
         "@diia-inhouse/diia-logger": "4.7.64",
         "@diia-inhouse/diia-metrics": "7.1.194",
-        "@types/i18n": "0.13.12",
         "glob": "14.0.2",
-        "he": "1.2.0",
-        "i18n": "0.15.3",
         "i18next": "25.8.13",
-        "i18next-fs-backend": "2.6.6",
-        "type-fest": "5.6.0"
+        "i18next-fs-backend": "2.6.6"
     },
     "devDependencies": {
         "@commitlint/cli": "20.4.2",
@@ -48,7 +44,6 @@
         "@diia-inhouse/test": "8.4.14",
         "@diia-inhouse/types": "14.13.3",
         "@diia-inhouse/validators": "2.2.145",
-        "@types/he": "1.2.3",
         "@types/node": "25.6.2",
         "@vitest/coverage-v8": "4.1.11",
         "@vitest/ui": "4.1.11",
