@@ -1,6 +1,6 @@
 {
     "name": "@diia-inhouse/i18n",
-    "version": "3.8.8",
+    "version": "3.8.9",
     "description": "Internationalization package",
     "license": "SEE LICENSE IN LICENSE.md",
     "author": "diia-team",
@@ -21,7 +21,6 @@
     "scripts": {
         "prebuild": "rimraf dist",
         "build": "tsdown",
-        "find-circulars": "madge --circular ./",
         "lint": "oxlint && oxfmt --check .",
         "lint-fix": "oxlint --fix && oxfmt .",
         "lint:lockfile": "lockfile-lint --path package-lock.json --allowed-hosts registry.npmjs.org --validate-https",
@@ -45,7 +44,7 @@
         "@commitlint/cli": "20.4.2",
         "@diia-inhouse/configs": "7.4.0",
         "@diia-inhouse/errors": "2.3.49",
-        "@diia-inhouse/oxc-config": "4.0.3",
+        "@diia-inhouse/oxc-config": "6.2.1",
         "@diia-inhouse/test": "8.4.14",
         "@diia-inhouse/types": "14.13.3",
         "@diia-inhouse/validators": "2.2.145",
@@ -54,7 +53,6 @@
         "@vitest/coverage-v8": "4.1.11",
         "@vitest/ui": "4.1.11",
         "lockfile-lint": "5.0.0",
-        "madge": "8.0.0",
         "oxfmt": "0.72.0",
         "oxlint": "1.87.0",
         "oxlint-tsgolint": "7.0.2003",
@@ -80,8 +78,5 @@
     },
     "engines": {
         "node": ">=24"
-    },
-    "madge": {
-        "tsConfig": "./tsconfig.json"
     }
 }
