@@ -1,6 +1,6 @@
 {
     "name": "@diia-inhouse/i18n",
-    "version": "3.9.0",
+    "version": "3.9.1",
     "description": "Internationalization package",
     "license": "SEE LICENSE IN LICENSE.md",
     "author": "diia-team",
@@ -33,7 +33,7 @@
         "@diia-inhouse/diia-logger": "4.7.64",
         "@diia-inhouse/diia-metrics": "7.1.194",
         "glob": "14.0.2",
-        "i18next": "25.8.13",
+        "i18next": "26.3.4",
         "i18next-fs-backend": "2.6.6"
     },
     "devDependencies": {
